@@ -1,0 +1,26 @@
+<div class="row mt-4 fit-with-padding">
+  <label class="pb-1" for="searchItem">Filtruj po nazwie (work in progress)</label>
+  <input
+    class="form-control form-control-lg"
+    type="text"
+    name="searchForItem"
+    id="searchItem"
+    #searchInput
+  >
+</div>
+<hr class="bg-info border-dotted border-top border-info">
+<div class="">
+  <ng-container *ngFor="let item of items">
+    <div
+      class="checkbox-as-chip"
+      (click)="addOrRemove($event, item[value])"
+      [ngClass]="{'d-none' : checkForHide(item[value])}"
+    >
+      <input type="checkbox" [name]="name" [id]="item[value]" [checked]="contains(item[value])">
+      <label [for]="item[value]">{{ item[value] }}</label>
+    </div>
+  </ng-container>
+</div>
+<div class="row">
+  <ng-content></ng-content>
+</div>

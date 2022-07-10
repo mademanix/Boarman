@@ -1,0 +1,37 @@
+:host::ng-deep {
+  .checkbox-as-chip {
+    padding: 10px;
+    display: inline-block;
+  }
+
+  input[type=checkbox] {
+    position: absolute;
+    display: none;
+  }
+
+  input[type=checkbox] + label {
+    padding: 15px;
+
+    border: 1px solid #ababab;
+    background-color: #ffffff;
+    color: #000000;
+    cursor: pointer;
+  }
+
+  input[type=checkbox]:checked + label {
+    padding: 15px;
+
+    border: 1px solid #73ff20;
+    background-color: #73ff20;
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  .fit-with-padding {
+    padding: 22px;
+  }
+
+  .border-dotted {
+    border-top: dotted;
+  }
+}

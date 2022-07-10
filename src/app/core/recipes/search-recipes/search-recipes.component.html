@@ -1,0 +1,11 @@
+<form (ngSubmit)="onSearch()" [formGroup]="searchRecipesForm">
+  <div class="container">
+    <lib-selectable-chips
+      [items]="ingredientList$ | async"
+      [value]="'strIngredient1'"
+      [name]="'ingredients'"
+      formControlName="ingredients"
+    ></lib-selectable-chips>
+  </div>
+  <button type="submit">Szukaj</button>
+</form>
