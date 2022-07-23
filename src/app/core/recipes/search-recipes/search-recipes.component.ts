@@ -1,12 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators,} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators,} from "@angular/forms";
 import {DictionariesService} from "../../../shared/api/services/dictionaries.service";
-import {Observable, switchMap} from "rxjs";
+import {Observable, tap} from "rxjs";
 import {Drink} from "../../../shared/api/models/cocktail";
 import {MessageService} from "primeng/api";
-import {CocktailApiService} from "../../../shared/api/services/cocktail-api.service";
-import {isNil, mapValues, omitBy} from "lodash";
-import {QuerySearchParams} from "../../../shared/api/models/query-params";
+import {RecipeStateService} from "../services/recipe-state.service";
 
 @Component({
   selector: 'app-search-recipes',
@@ -18,17 +16,19 @@ export class SearchRecipesComponent implements OnInit {
   public searchRecipesForm: FormGroup;
 
   public glassList$: Observable<Partial<Drink>[]> = this.dictionariesService.glassList$;
-  public ingredientList$: Observable<Partial<Drink>[]> = this.dictionariesService.ingredientList$;
+  public ingredientList$: Observable<Partial<Drink>[]> = this.dictionariesService.ingredientList$.pipe(
+    tap(ingredientList => {
+      return ingredientList.sort((a, b) => a.strIngredient1.localeCompare(b.strIngredient1));
+    })
+  );
   public categoryList$: Observable<Partial<Drink>[]> = this.dictionariesService.categoryList$;
   public alcoholicCategoryList$: Observable<Partial<Drink>[]> = this.dictionariesService.alcoholicCategoryList$;
-
-  private responseDrinks: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private dictionariesService: DictionariesService,
     private messageService: MessageService,
-    private cocktailApiService: CocktailApiService,
+    private recipeStateService: RecipeStateService,
   ) {
   }
 
@@ -40,7 +40,6 @@ export class SearchRecipesComponent implements OnInit {
   }
 
   public onSearch(): void {
-    this.responseDrinks = [];
     this.searchRecipesForm.markAsTouched();
     if (this.searchRecipesForm.invalid) {
       return;
@@ -48,25 +47,15 @@ export class SearchRecipesComponent implements OnInit {
 
     const values = this.searchRecipesForm.value.ingredients;
 
-    if (values.length > 4) {
+    if (values.length > 5) {
       this.messageService.add({
         severity: 'error',
-        detail: 'Możesz wybrać max 4 składniki',
+        detail: 'Możesz wybrać max 5 składniki. W przeciwnym razie możesz dostać bana na API :O',
       })
       return;
     }
 
-    values.forEach(value => {
-      this.cocktailApiService.filter({
-        i: value,
-      }).subscribe(drinks => this.responseDrinks.push(drinks));
-    });
-
-
-    console.log(this.responseDrinks);
-    console.log(this.responseDrinks.reduce((a, b) => {
-      return a.concat(b);
-    }));
+    this.recipeStateService.fetchUniqueCocktailList(values);
   }
 
   private initForm(): void {

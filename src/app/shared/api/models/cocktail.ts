@@ -56,5 +56,4 @@ export interface UnresolvedResponse {
   drinks: Drink[]; // this is so convoluted, but this api is free so...
 }
 
-export type PartialDrink = Partial<Drink>
 

@@ -1,23 +1,23 @@
 import {Injectable} from "@angular/core";
 import {BehaviorSubject, Observable} from "rxjs";
 import {CocktailApiService} from "./cocktail-api.service";
-import {PartialDrink} from "../models/cocktail";
+import {Drink} from "../models/cocktail";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DictionariesService {
-  public glassListSubject: BehaviorSubject<PartialDrink[]> = new BehaviorSubject<PartialDrink[]>([]);
-  public glassList$: Observable<PartialDrink[]> = this.glassListSubject.asObservable();
+  public glassListSubject: BehaviorSubject<Partial<Drink>[]> = new BehaviorSubject<Partial<Drink>[]>([]);
+  public glassList$: Observable<Partial<Drink>[]> = this.glassListSubject.asObservable();
 
-  public categoryListSubject: BehaviorSubject<PartialDrink[]> = new BehaviorSubject<PartialDrink[]>([]);
-  public categoryList$: Observable<PartialDrink[]> = this.categoryListSubject.asObservable();
+  public categoryListSubject: BehaviorSubject<Partial<Drink>[]> = new BehaviorSubject<Partial<Drink>[]>([]);
+  public categoryList$: Observable<Partial<Drink>[]> = this.categoryListSubject.asObservable();
 
-  public ingredientListSubject: BehaviorSubject<PartialDrink[]> = new BehaviorSubject<PartialDrink[]>([]);
-  public ingredientList$: Observable<PartialDrink[]> = this.ingredientListSubject.asObservable();
+  public ingredientListSubject: BehaviorSubject<Partial<Drink>[]> = new BehaviorSubject<Partial<Drink>[]>([]);
+  public ingredientList$: Observable<Partial<Drink>[]> = this.ingredientListSubject.asObservable();
 
-  public alcoholicCategoryListSubject: BehaviorSubject<PartialDrink[]> = new BehaviorSubject<PartialDrink[]>([]);
-  public alcoholicCategoryList$: Observable<PartialDrink[]> = this.alcoholicCategoryListSubject.asObservable();
+  public alcoholicCategoryListSubject: BehaviorSubject<Partial<Drink>[]> = new BehaviorSubject<Partial<Drink>[]>([]);
+  public alcoholicCategoryList$: Observable<Partial<Drink>[]> = this.alcoholicCategoryListSubject.asObservable();
 
   constructor(private cocktailApiService: CocktailApiService) {
   }

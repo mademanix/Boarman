@@ -34,7 +34,7 @@ export class SelectableChipsComponent implements ControlValueAccessor, AfterView
       tap(() => {
         if (this.searchInput.nativeElement.value) {
           const textToSearch = this.searchInput.nativeElement.value.toLowerCase();
-          const elements = this.items.filter(item => {
+          const elements = this.items.filter((item: any) => {
             return item[this.value].toLowerCase() === textToSearch
           });
           this.hideChips(elements);
@@ -77,7 +77,7 @@ export class SelectableChipsComponent implements ControlValueAccessor, AfterView
     return false;
   }
 
-  public checkForHide(item): boolean {
+  public checkForHide(item: any): boolean {
     return this.visibilityFlag.includes(item);
   }
 

@@ -1,0 +1,27 @@
+<ng-container *ngIf="drinkDetails$ | async as drinkDetails">
+  <div class="container-fluid">
+    <div class="row mt-4 pt-4">
+      <div class="col-4">
+        <h5 class="h5 pt-4">Składniki</h5>
+        <ol class="list-group">
+          <li class="list-group-item" *ngFor="let ingredient of drinkDetails.strIngredient1.slice(0, -1).split(',')">
+            {{ ingredient }}
+          </li>
+        </ol>
+        <h5 class="h5 pt-4">Typ szkła</h5>
+        <p>{{drinkDetails.strGlass}}</p>
+      </div>
+      <div class="col-4">
+        <img
+          class="img-thumbnail"
+          src="{{drinkDetails.strDrinkThumb}}"
+          alt="{{drinkDetails.strImageAttribution || 'cocktail image'}}"
+        >
+      </div>
+      <div class="col-4">
+        <h5 class="h5 pt-4">Instrukcja</h5>
+        <p>{{drinkDetails.strInstructions}}</p>
+      </div>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,16 @@
+<div class="container" *ngIf="(loading$ | async) === false">
+  <p-table [value]="(commonCocktailList$ | async) || []" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nazwa</th>
+        <th>Grafika</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-drink>
+      <tr>
+        <td><a [routerLink]="['/drink', drink.idDrink]">{{drink.strDrink}}</a></td>
+        <td><img src="{{drink.strDrinkThumb}}" alt="" height="150px"></td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
