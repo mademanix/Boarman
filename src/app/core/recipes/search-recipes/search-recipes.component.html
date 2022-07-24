@@ -1,5 +1,7 @@
 <form (ngSubmit)="onSearch()" [formGroup]="searchRecipesForm">
   <div class="container">
+    <button type="submit" pButton iconPos="right" style="margin: 10px">Szukaj</button>
+    <button type="reset" pButton iconPos="right" style="margin: 10px">Wyczyść</button>
     <lib-selectable-chips
       [items]="ingredientList$ | async"
       [value]="'strIngredient1'"
@@ -7,5 +9,4 @@
       formControlName="ingredients"
     ></lib-selectable-chips>
   </div>
-  <button type="submit">Szukaj</button>
 </form>

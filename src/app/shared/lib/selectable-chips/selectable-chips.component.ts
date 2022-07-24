@@ -1,6 +1,7 @@
-import {AfterViewInit, Component, ElementRef, forwardRef, Input, ViewChild} from '@angular/core';
+import {OnChanges, Component, forwardRef, Input, SimpleChanges} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
-import {debounceTime, distinctUntilChanged, filter, fromEvent, tap} from "rxjs";
+import {debounceTime, distinctUntilChanged, Subject} from "rxjs";
+import {FilterService} from "primeng/api";
 
 @Component({
   selector: 'lib-selectable-chips',
@@ -12,37 +13,44 @@ import {debounceTime, distinctUntilChanged, filter, fromEvent, tap} from "rxjs";
     multi: true
   }]
 })
-export class SelectableChipsComponent implements ControlValueAccessor, AfterViewInit {
-
-  @ViewChild('searchInput') searchInput: ElementRef;
+export class SelectableChipsComponent implements ControlValueAccessor, OnChanges {
 
   @Input() public items: unknown[];
+  public filteredItems: unknown[] = [];
+
   @Input() public value: string;
   @Input() public name: string;
 
+  public filter: string = '';
+  public filteredIngredients: Subject<string> = new Subject();
+
   private currentValue: unknown[] = [];
-  private visibilityFlag: any[] = [];
 
   private onChange: (m: any) => void;
   private onTouched: (m: any) => void;
 
-  public ngAfterViewInit(): void {
-    fromEvent(this.searchInput.nativeElement, 'keyup').pipe(
-      filter(Boolean),
+  constructor(
+    private filterService: FilterService,
+  ) {
+    this.filteredIngredients.pipe(
       debounceTime(400),
-      distinctUntilChanged(),
-      tap(() => {
-        if (this.searchInput.nativeElement.value) {
-          const textToSearch = this.searchInput.nativeElement.value.toLowerCase();
-          const elements = this.items.filter((item: any) => {
-            return item[this.value].toLowerCase() === textToSearch
-          });
-          this.hideChips(elements);
-        } else {
-          this.showAllChips();
+      distinctUntilChanged()
+    ).subscribe(value => {
+      const candidates = [];
+      this.items.forEach(item => {
+        if (this.filterService.filters.contains(item[this.value], value)) {
+          candidates.push(item);
         }
-      })
-    ).subscribe()
+      });
+      this.filteredItems = candidates;
+      console.log(this.filteredItems);
+    })
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.items?.currentValue) {
+      this.filteredItems = this.items;
+    }
   }
 
   public registerOnChange(fn: any): void {
@@ -77,10 +85,6 @@ export class SelectableChipsComponent implements ControlValueAccessor, AfterView
     return false;
   }
 
-  public checkForHide(item: any): boolean {
-    return this.visibilityFlag.includes(item);
-  }
-
   private add(value: unknown) {
     if (!this.contains(value)) {
       if (this.currentValue instanceof Array) {
@@ -100,17 +104,5 @@ export class SelectableChipsComponent implements ControlValueAccessor, AfterView
 
     this.currentValue.splice(index, 1);
     this.onChange(this.currentValue);
-  }
-
-  private hideChips(elements: any[]): void {
-    elements.forEach(element => {
-      this.visibilityFlag.push({
-        strIngredient1: element
-      })
-    });
-  }
-
-  private showAllChips(): void {
-    this.visibilityFlag = [];
   }
 }
